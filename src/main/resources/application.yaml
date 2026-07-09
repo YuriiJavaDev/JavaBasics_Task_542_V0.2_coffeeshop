@@ -1,0 +1,6 @@
+server:
+  port: 8081
+
+coffee:
+  shop:
+   city: Haifa
