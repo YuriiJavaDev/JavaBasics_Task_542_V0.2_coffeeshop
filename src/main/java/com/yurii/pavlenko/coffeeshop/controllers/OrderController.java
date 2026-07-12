@@ -2,7 +2,7 @@ package com.yurii.pavlenko.coffeeshop.controllers;
 
 import com.yurii.pavlenko.coffeeshop.config.CoffeeShopProperties;
 import com.yurii.pavlenko.coffeeshop.models.*;
-import com.yurii.pavlenko.coffeeshop.validators.OrderValidator; // ДОДАЙТЕ ЦЕЙ ІМПОРТ
+import com.yurii.pavlenko.coffeeshop.validators.OrderValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,9 +50,9 @@ public class OrderController {
                 request.quantity());
 
         OrderResponseDTO response = new OrderResponseDTO(
-                order.getId(),
-                order.getItem(),
-                order.getQuantity(),
+                order.id(),
+                order.item(),
+                order.quantity(),
                 coffeeShopProperties.name());
 
         ordersRepository.add(response);
