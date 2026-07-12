@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -20,23 +23,26 @@ public class OrderController {
     private final CoffeeShopProperties coffeeShopProperties;
     private final AtomicLong idGenerator = new AtomicLong(1);
 
+    // Сховище для замовлень у пам'яті програми
+    private final List<OrderResponseDTO> ordersRepository = new ArrayList<>();
+
     public OrderController(CoffeeShopProperties coffeeShopProperties){
         this.coffeeShopProperties = coffeeShopProperties;
     }
 
     @GetMapping("/shop-name")
     public String shopName() {
-        return coffeeShopProperties.getName();
+        return coffeeShopProperties.name();
     }
 
     @GetMapping("/max-orders")
     public int maxOrders() {
-        return coffeeShopProperties.getMaxOrders();
+        return coffeeShopProperties.maxOrders();
     }
 
     @GetMapping("/info")
     public String info() {
-        return "Coffee shop " + coffeeShopProperties.getName() + " - " + coffeeShopProperties.getCity() + " - max orders: " + coffeeShopProperties.getMaxOrders();
+        return "Coffee shop " + coffeeShopProperties.name() + " - " + coffeeShopProperties.city() + " - max orders: " + coffeeShopProperties.maxOrders();
     }
 
     @PostMapping("/orders")
@@ -44,15 +50,22 @@ public class OrderController {
 
         Order order = new Order(
                 idGenerator.getAndIncrement(),
-                request.getItem(),
-                request.getQuantity());
+                request.item(),
+                request.quantity());
 
         OrderResponseDTO response = new OrderResponseDTO(
                 order.getId(),
                 order.getItem(),
                 order.getQuantity(),
-                coffeeShopProperties.getName());
+                coffeeShopProperties.name());
+
+        ordersRepository.add(response);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/orders")
+    public List<OrderResponseDTO> getAllOrders() {
+        return ordersRepository;
     }
 }

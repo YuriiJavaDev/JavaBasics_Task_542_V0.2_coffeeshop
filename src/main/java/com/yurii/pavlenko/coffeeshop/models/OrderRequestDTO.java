@@ -1,21 +1,8 @@
 package com.yurii.pavlenko.coffeeshop.models;
 
-public class OrderRequestDTO {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    private final String item;
-    private final int quantity;
-
-    public OrderRequestDTO(long id, String item, int quantity) {
-        this.item = item;
-        this.quantity = quantity;
-    }
-
-
-    public String getItem() {
-        return item;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-}
+public record OrderRequestDTO(
+        @JsonProperty("item") String item,
+        @JsonProperty("quantity") int quantity
+) {}
