@@ -1,4 +1,4 @@
-package com.yurii.pavlenko.coffeeshop;
+package com.yurii.pavlenko.coffeeshop.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

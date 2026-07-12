@@ -65,9 +65,11 @@ public class CoffeeshopApplication {
     }
 }
 ```
+
 ```java
 package com.yurii.pavlenko.coffeeshop;
 
+import com.yurii.pavlenko.coffeeshop.config.CoffeeShopProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -76,7 +78,7 @@ public class OrderController {
 
     private final CoffeeShopProperties coffeeShopProperties;
 
-    public OrderController(CoffeeShopProperties coffeeShopProperties){
+    public OrderController(CoffeeShopProperties coffeeShopProperties) {
         this.coffeeShopProperties = coffeeShopProperties;
     }
 

@@ -1,33 +1,27 @@
 package com.yurii.pavlenko.coffeeshop.controllers;
 
-import com.yurii.pavlenko.coffeeshop.CoffeeShopProperties;
-import com.yurii.pavlenko.coffeeshop.models.Order;
-import com.yurii.pavlenko.coffeeshop.models.OrderRequestDTO;
-import com.yurii.pavlenko.coffeeshop.models.OrderResponseDTO;
-
+import com.yurii.pavlenko.coffeeshop.config.CoffeeShopProperties;
+import com.yurii.pavlenko.coffeeshop.models.*;
+import com.yurii.pavlenko.coffeeshop.validators.OrderValidator; // ДОДАЙТЕ ЦЕЙ ІМПОРТ
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class OrderController {
 
     private final CoffeeShopProperties coffeeShopProperties;
+    private final OrderValidator orderValidator;
     private final AtomicLong idGenerator = new AtomicLong(1);
-
-    // Сховище для замовлень у пам'яті програми
     private final List<OrderResponseDTO> ordersRepository = new ArrayList<>();
 
-    public OrderController(CoffeeShopProperties coffeeShopProperties){
+    public OrderController(CoffeeShopProperties coffeeShopProperties, OrderValidator orderValidator) {
         this.coffeeShopProperties = coffeeShopProperties;
+        this.orderValidator = orderValidator;
     }
 
     @GetMapping("/shop-name")
@@ -48,6 +42,8 @@ public class OrderController {
     @PostMapping("/orders")
     public ResponseEntity<OrderResponseDTO> addOrder(@RequestBody OrderRequestDTO request) {
 
+        orderValidator.validate(request);
+
         Order order = new Order(
                 idGenerator.getAndIncrement(),
                 request.item(),
@@ -60,7 +56,6 @@ public class OrderController {
                 coffeeShopProperties.name());
 
         ordersRepository.add(response);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
